@@ -8,10 +8,10 @@ urlpatterns = [
     url(r'^ParkingLot/$', views.ParkingLotList.as_view()),
     url(r'^ParkingLot/(?P<numberPlate>[\w|\Wa-z0-9]+)/$', views.ParkingLotDetail.as_view()),
     url(r'^TurnManagement/$', views.TurnManagementList.as_view()),
-    url(r'^TurnManagement/(?P<pk>[0-9]+)/$', views.TurnMangementDetail.as_view()),
+    url(r'^TurnManagement/(?P<numberPlate>[\w|\Wa-z0-9]+)/$', views.TurnMangementDetail.as_view()),
     url(r'^VehicleIn/$', views.vehicleIn),
     url(r'^VehicleOut/$', views.vehicleOut),
-    url(r'^RegiterMonthlyTicket/$', views.registerMonthlyTicket),
+    url(r'^RegisterMonthlyTicket/$', views.registerMonthlyTicket),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

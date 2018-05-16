@@ -26,8 +26,8 @@ class Student(models.Model):
     birthday = models.DateField()
     vehicle = models.OneToOneField(Vehicle, on_delete = models.CASCADE)
     kindOfTicket = models.BooleanField(default = False)         #false co nghia la ve ngay
-    startDate = models.DateField(default = None, null = True, blank = True)
-    expirationDate = models.DateField(default = None, null = True, blank =  True) 
+    startDate = models.DateField(null = True, blank = True)
+    expirationDate = models.DateField(null = True, blank =  True) 
     
     def setStartDate(self, startDate):
         self.startDate = startDate

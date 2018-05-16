@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
 from .models import *
-from datetime import datetime
+from datetime import datetime, date
 from rest_framework.decorators import api_view
 from rest_framework import permissions
 
@@ -54,6 +54,7 @@ class StudentDetail(APIView):
             if (student.getNumberPlate() != request.data["vehicle"]):
                 return Response("This vehicle belong to other student",status=status.HTTP_400_BAD_REQUEST)
         else: 
+            Vehicle.objects.filter(pk = student.getNumberPlate()).delete()
             vehicle = Vehicle.objects.create(pk = request.data["vehicle"]) 
             vehicle.save()
         if "kindOfTicket" in request.data:
@@ -103,30 +104,32 @@ class TurnManagementList(APIView):
 class TurnMangementDetail(APIView):
     def get_object(self, numberPlate):
         try:
-            return DailyTurnManagement.objects.get(numberPlate = numberPlate)
+            return DailyTurnManagement.objects.filter(numberPlate = numberPlate)
         except DailyTurnManagement.DoesNotExist:
             raise Http404
 
 # Thong luot gui chi tiet trong ngay
     def get(self, request, numberPlate, format=None):
         tempPark  = self.get_object(numberPlate)
-        serializer = DailyTurnManagementSerializer(tempPark)
+        serializer = DailyTurnManagementSerializer(tempPark, many = True)
         return Response(serializer.data)
 
 @api_view(['POST'])
 def vehicleIn(request):
     json = request.data
+    if (ParkingLot.objects.filter(numberPlate = json["numberPlate"])):
+        return Response("This vehicle was parked. Please check this student", status=status.HTTP_400_BAD_REQUEST)
     try:
         student = Student.objects.get(pk=json["student"])
     except Student.DoesNotExist:
         return Response("This person did not have ticket!", status=status.HTTP_404_NOT_FOUND)
     if student.getNumberPlate() != json["numberPlate"]:
         return Response("Student has registered another vehicle.", status=status.HTTP_400_BAD_REQUEST)
-    student.vehicle.status = True
-    #del json["student"]
+    vehicle = Vehicle.objects.get(pk = json["numberPlate"])
+    vehicle.status = True
+    vehicle.save()
     timeIn = datetime.now()
     json["timeIn"] = timeIn
-    #json["student"] = student
     statusSerializer = ParkingLotSerializer(data = json)
     timeOut = None
     json["timeOut"] = timeOut
@@ -148,6 +151,9 @@ def vehicleOut(request):
             return Response("This vehicle does not belong to the sutdent", status=status.HTTP_400_BAD_REQUEST)
     except ParkingLot.DoesNotExist:
         return Response("This vehicle wasn't parked here", status=status.HTTP_404_NOT_FOUND)
+    vehicle = Vehicle.objects.get(pk = json["numberPlate"])
+    vehicle.status = False 
+    vehicle.save()
     json["timeIn"] = tempPark.timeIn
     tempPark.delete()
     json["timeOut"] = datetime.now() 
@@ -163,13 +169,17 @@ def registerMonthlyTicket(request):
         student = Student.objects.get(pk = json["studentID"])
     except Student.DoesNotExist:
         return Response("This person haven't had ticket!", status=status.HTTP_404_NOT_FOUND)
-    kindOfTicket = json["kindOfTicket"]
+    kindOfTicket = bool(json["kindOfTicket"])
     # Neu la ve thang
-    if kindOfMonthlyTicket == True:
-        student.kindOfTicket = True
-        student.setStartDate(json["startDate"]) 
-        student.setExpirationDate(json["expirationDate"])
+    if kindOfTicket == True:
+        student.kindOfTicket = True 
+        year, month, day = map(int, json["startDate"].split("-"))
+        startDate = date(year, month, day)
+        student.setStartDate(startDate)
+        year, month, day = json["expirationDate"].split("-")
+        expirationDate = date(int(year), int(month), int(day))
+        student.setExpirationDate(expirationDate)
         student.save()
         return Response("Register Monthly Ticket successfully!!")
     else: 
-        return Response("Please setting Kind Of Ticket properly")
+        return Response("Ticket is still daily ticket")

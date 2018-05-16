@@ -1,0 +1,49 @@
+cai nay la de dang ki ve cho sinh vien lan dau tien
+{
+        "name": "Kien",
+        "studentID": "20142400",
+        "faculty": "DTVT",
+        "birthday": "2018-05-15",
+        "vehicle": "30-h9 6359",
+        "kindOfTicket": false,
+        "startDate": null,
+        "expirationDate": null
+}
+
+cai nay la sua thong tin tren ve
+{
+    "faculty": "CNTT",
+    "birthday": "2018-05-15",
+    "vehicle": "30-h9 6359"
+}
+{
+    "name": "Thang'",
+    "studentID": "20144200",
+    "faculty": "CNTT",
+    "birthday": "2018-05-15",
+    "vehicle": "30-h9 6359"
+}
+
+cai nay la de cho vehicleIN
+{
+    "student": "20142401",
+    "numberPlate": "30H8-6359"
+}
+
+cai nay de vehicle out
+{
+    "numberPlate": "16L9-1636",
+    "student": "20144242"
+}
+
+cai nay de dang ki ve thang
+{
+	"studentID": "20144242",
+	"kindOfTicket" : "True",
+	"startDate" : "2018-05-15",
+	"expirationDate" : "2018-05-17"
+}
+
+
+
+
