@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
+from django.http import Http404
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,15 +10,23 @@ from .serializers import *
 from .models import *
 from datetime import datetime
 from rest_framework.decorators import api_view
+from rest_framework import permissions
 
 # Create your views here.
 class StudentList(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+# Liet ke tat ca cac sinh vien va xe cua sinh vien
     def get(self, request, format=None):
         students = Student.objects.all()
         serializer = StudentSerializer(students, many=True)
         return Response(serializer.data)
 
+# Tao moi ve xe cho sinh vien
     def post(self, request, format=None):
+        if (Vehicle.objects.filter(pk = request.data["vehicle"])):
+            return Response("This vehicle existed",status=status.HTTP_400_BAD_REQUEST)
+        vehicle = Vehicle.objects.create(pk = request.data["vehicle"]) 
+        vehicle.save()
         serializer = StudentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -25,87 +34,103 @@ class StudentList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class StudentDetail(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def get_object(self, pk):
         try:
             return Student.objects.get(pk=pk)
         except Student.DoesNotExist:
             raise Http404
 
+# Lay thong tin cua 1 sinh vien
     def get(self, request, pk, format=None):
         student  = self.get_object(pk)
         serializer = StudentSerializer(student)
         return Response(serializer.data)
 
+# Sua thong tin tren ve cho sinh vien
     def put(self, request, pk, format=None):
         student = self.get_object(pk)
+        if (Vehicle.objects.filter(pk = request.data["vehicle"])):
+            if (student.getNumberPlate() != request.data["vehicle"]):
+                return Response("This vehicle belong to other student",status=status.HTTP_400_BAD_REQUEST)
+        else: 
+            vehicle = Vehicle.objects.create(pk = request.data["vehicle"]) 
+            vehicle.save()
+        if "kindOfTicket" in request.data:
+            return Response("You not have permission to change this. Please register your ticket in properly way", status=status.HTTP_400_BAD_REQUEST)
         serializer = StudentSerializer(student, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Xoa thong tin ve cua sinh vien
     def delete(self, request, pk, format=None):
         student = self.get_object(pk)
         student.delete()
+        vehicle = Vehicle.objects.get(pk = student.getNumberPlate())
+        vehicle.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class MomentStatusList(APIView):
+
+# Thong ke cac xe gui trong bai
+class ParkingLotList(APIView):
     def get(self, request, format = None):
-        tempParks = MomentStatus.objects.all()
-        serializer = MomentStatusSerializer(tempParks, many=True)
+        tempParks = ParkingLot.objects.all()
+        serializer = ParkingLotSerializer(tempParks, many=True) 
         return Response(serializer.data)
 
-class MomentStatusDetail(APIView):
-    def get_object(self, pk):
+class ParkingLotDetail(APIView):
+    def get_object(self, numberPlate):
         try:
-            return MomentStatus.objects.get(pk=pk)
-        except MomentStatus.DoesNotExist:
+            return ParkingLot.objects.get(numberPlate = numberPlate)
+        except ParkingLot.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
-        tempPark  = self.get_object(pk)
-        serializer = MomentStatusSerializer(tempPark)
+# Xem ho so cua 1 xe trong bai 
+    def get(self, request, numberPlate, format=None):
+        tempPark  = self.get_object(numberPlate)
+        serializer = ParkingLotSerializer(tempPark)
         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
-        tempPark = self.get_object(pk)
-        serializer = MomentStatusSerializer(tempPark, data=request.data)
-        print (request.data)
-        print (type(request.data))
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
-        tempPark = self.get_object(pk)
-        tempPark.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class DailyReportList(APIView):
+class TurnManagementList(APIView):
     def get(self, request, format = None):
-        report = DailyReport.objects.all()
-        serializer = DailyReportSerializer(report, many=True)
+        report = DailyTurnManagement.objects.all()
+        serializer = DailyTurnManagementSerializer(report, many=True)
+        return Response(serializer.data)
+
+class TurnMangementDetail(APIView):
+    def get_object(self, numberPlate):
+        try:
+            return DailyTurnManagement.objects.get(numberPlate = numberPlate)
+        except DailyTurnManagement.DoesNotExist:
+            raise Http404
+
+# Thong luot gui chi tiet trong ngay
+    def get(self, request, numberPlate, format=None):
+        tempPark  = self.get_object(numberPlate)
+        serializer = DailyTurnManagementSerializer(tempPark)
         return Response(serializer.data)
 
 @api_view(['POST'])
 def vehicleIn(request):
     json = request.data
     try:
-        student = Student.objects.get(pk=json["studentID"])
-        if len(MomentStatus.objects.filter(pk=json["numberPlate"])):
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        student = Student.objects.get(pk=json["student"])
     except Student.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    del json["studentID"]
+        return Response("This person did not have ticket!", status=status.HTTP_404_NOT_FOUND)
+    if student.getNumberPlate() != json["numberPlate"]:
+        return Response("Student has registered another vehicle.", status=status.HTTP_400_BAD_REQUEST)
+    student.vehicle.status = True
+    #del json["student"]
     timeIn = datetime.now()
     json["timeIn"] = timeIn
-    json["student"] = student
-    statusSerializer = MomentStatusSerializer(data = json)
+    #json["student"] = student
+    statusSerializer = ParkingLotSerializer(data = json)
     timeOut = None
     json["timeOut"] = timeOut
-    dailySerializer = DailyReportSerializer(data = json)
+    dailySerializer = DailyTurnManagementSerializer(data = json)
     if statusSerializer.is_valid():
         statusSerializer.save()
         if dailySerializer.is_valid():
@@ -117,13 +142,34 @@ def vehicleIn(request):
 def vehicleOut(request):
     json = request.data
     try:
-        tempPark = MomentStatus.objects.get(pk=json["numberPlate"])
-    except MomentStatus.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    json["timeIn"] = tempPark.getTimeIn()
+        # Lay xe ra dua theo bien so xe roi check lai so voi sinh vien
+        tempPark = ParkingLot.objects.get(numberPlate = json["numberPlate"])
+        if tempPark.student.studentID != json["student"]:
+            return Response("This vehicle does not belong to the sutdent", status=status.HTTP_400_BAD_REQUEST)
+    except ParkingLot.DoesNotExist:
+        return Response("This vehicle wasn't parked here", status=status.HTTP_404_NOT_FOUND)
+    json["timeIn"] = tempPark.timeIn
     tempPark.delete()
     json["timeOut"] = datetime.now() 
-    objectReport = DailyReport.objects.get(timeIn=json["timeIn"])
+    objectReport = DailyTurnManagement.objects.get(timeIn=json["timeIn"])
     objectReport.setTimeOut(json["timeOut"])
     objectReport.save()
     return Response(json, status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+def registerMonthlyTicket(request):
+    json = request.data
+    try:
+        student = Student.objects.get(pk = json["studentID"])
+    except Student.DoesNotExist:
+        return Response("This person haven't had ticket!", status=status.HTTP_404_NOT_FOUND)
+    kindOfTicket = json["kindOfTicket"]
+    # Neu la ve thang
+    if kindOfMonthlyTicket == True:
+        student.kindOfTicket = True
+        student.setStartDate(json["startDate"]) 
+        student.setExpirationDate(json["expirationDate"])
+        student.save()
+        return Response("Register Monthly Ticket successfully!!")
+    else: 
+        return Response("Please setting Kind Of Ticket properly")

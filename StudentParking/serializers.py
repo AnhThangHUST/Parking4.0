@@ -5,14 +5,19 @@ from StudentParking.models import *
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ('studentID', 'name', 'isMonthlyTicket')
+        fields = ('name', 'studentID', 'faculty', 'birthday', 'vehicle', 'kindOfTicket', 'startDate', 'expirationDate')
 
-class MomentStatusSerializer(serializers.ModelSerializer):
+class ParkingLotSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MomentStatus
+        model = ParkingLot
         fields = ('student', 'numberPlate', 'timeIn')
 
-class DailyReportSerializer(serializers.ModelSerializer):
+class DailyTurnManagementSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DailyReport
+        model = DailyTurnManagement
         fields = ("id", 'student', 'numberPlate', 'timeIn', 'timeOut')
+
+class VehicleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vehicle
+        fields = ('numberPlate', 'status')
