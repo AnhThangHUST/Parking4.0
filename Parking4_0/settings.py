@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+#APPEND_SLASH=False
 # Application definition
 
 INSTALLED_APPS = [
@@ -119,4 +119,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
+STATIC_ROOT = '/home/thepbk/prog/huongDoiTuong/Parking4.0/StudentParking/static'
+#STATICFILES_DIRS = (
+#    # location of your application, should not be public web accessible 
+#    '/home/thepbk/prog/huongDoiTuong/Parking4.0/StudentParking/static',
+#)
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    )
+}

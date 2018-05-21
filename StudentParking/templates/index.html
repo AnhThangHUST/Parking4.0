@@ -1,0 +1,309 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"><head>
+	<title> Example </title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">  
+	<script type="text/javascript" src="{% static 'bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static '1.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'bootstrap.css' %}"/>
+ 	<link rel="stylesheet" href="{% static '1.css' %}"  type="text/css"/>
+ 	<script src="http://code.jquery.com/jquery-2.2.0.min.js"></script>
+ 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    
+</head>
+<body >
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav nav nav-tabs" id="sidebar-nav">
+                <li class="sidebar-brand">
+                    <h3 style="text-align: center;padding-right: 25px;padding-top: 8px; color: white;">
+                        Parking Project
+                    </h3>
+                </li>
+                <li class="active">
+                    <a href="#dkvcsv">Đăng kí vé cho sinh viên </a>
+                </li>
+                <li>
+                    <a href="#dkvt">Đăng ký vé tháng</a>
+                </li>
+                <li>
+                    <a href="#tdtttv">Thay đổi thông tin trên vé</a>
+                </li>
+                <li>
+                    <a href="#tttcsv">Thông tin tất cả sinh viên</a>
+                </li>
+                <li>
+                    <a href="#qlxtb">Quản lý xe trong bãi</a>
+                </li>
+                <!-- <li>
+                    <a href="#tab5">tab5</a>
+                </li>
+                <li>
+                    <a href="#tab6">tab6</a>
+                </li> -->
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div class="tab-content">
+        <div class="tab-pane active" id="dkvcsv">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-3"> </div>
+                    <div class="col-md-6">
+                        <h1 class="text-center text-success"> Đăng ký vé cho sinh viên </h1>
+                        <br/>
+                        <div class="col-sm-12">
+                            <div class="tab-content">
+                                <div id="home" class="tab-pane fade in active">
+                                    <form action="#" id="dkvcsvForm">
+                                        <div class="form-group">
+                                            <label>Student Name</label>
+                                            <input type="text" class="form-control" id="nameDkvcsv">
+                                        </div> 
+                                        <div class="form-group">
+                                            <label>Student ID</label>
+                                            <input type="text" class="form-control" id="studentIDDkvcsv">
+                                        </div> 
+                                        <div class="form-group">
+                                            <label>Faculty</label>
+                                            <input type="text" class="form-control" id="facultyDkvcvd">
+                                        </div> 
+                                        <div class="form-group">
+                                            <label>Birthday</label>
+                                            <input type="text" class="form-control" id="birthdayDkvcsv">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Vehicle Plate</label>
+                                            <input type="text" class="form-control" id="vehicleDkvcsv">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Ticket Monthly</label>
+                                            <br>
+                                            <div class="material-switch ">
+                                                <input id="checkboxDkvcsv" name="someSwitchOption001" type="checkbox" onclick="dkvcsvCheckbox()"/>
+                                                <label for="checkboxDkvcsv" class="label-primary"></label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <form>
+                                        <button type="submit" class="btn btn-default btn-lg" id="submitDkvcsv" onclick="getDkvcsvValue()">Submit</button>
+                                    </form>
+                                    <br/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-pane" id="dkvt">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-3"> </div>
+                    <div class="col-md-6">
+                        <h1 class="text-center text-success"> Đăng ký vé tháng </h1>
+                        <br/>
+                        <div class="col-sm-12">
+                            <div class="tab-content">
+                                <div id="home" class="tab-pane fade in active">
+                                    <form action="#" id="dkvtForm">
+                                        <div class="form-group">
+                                            <label>Student ID</label>
+                                            <input type="text" class="form-control" id="studentIDDkvt">
+                                        </div> 
+                                        <div class="form-group">
+                                            <label>Ticket Monthly</label>
+                                            <br>
+                                            <div class="material-switch ">
+                                                <input id="checkboxDkvt" name="someSwitchOption001" type="checkbox" onclick="dkvtCheckbox()"/>
+                                                <label for="checkboxDkvt" class="label-primary"></label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <form>
+                                        <button type="submit" class="btn btn-default btn-lg" id="submitDkvt">Submit</button>
+                                    </form>
+                                    <br/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="tdtttv">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-3"> </div>
+                    <div class="col-md-6">
+                        <h1 class="text-center text-success"> Thay đổi thông tin trên vé </h1>
+                        <br/>
+                        <div class="col-sm-12">
+                            <div class="tab-content">
+                                <div id="home" class="tab-pane fade in active">
+                                    <form action="#">
+                                        <div class="form-group">
+                                            <label>Student Name</label>
+                                            <input type="text" class="form-control" id="nametxt">
+                                        </div> 
+                                        <div class="form-group">
+                                            <label>Student ID</label>
+                                            <input type="text" class="form-control" id="studentIDtxt">
+                                        </div> 
+                                        <div class="form-group">
+                                            <label>Faculty</label>
+                                            <input type="text" class="form-control" id="fucultytxt">
+                                        </div> 
+                                        <div class="form-group">
+                                            <label>Birthday</label>
+                                            <input type="text" class="form-control" id="birthdaytxt">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Vihicle Plate</label>
+                                            <input type="text" class="form-control" id="vihicletxt">
+                                        </div>
+                                        <button type="submit" class="btn btn-default btn-lg">Submit</button>
+                                    </form>
+                                    <br/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-pane" id="tttcsv">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="text-center text-success" style="padding-top: 15px;"> Thông tin tất cả sinh viên</h1>
+                        <table id="tttcsvTable">
+                            <tr style="background-color: #006186; color: white;">
+                                <th>Name</th>
+                                <th>Student ID</th>
+                                <th>Faculty</th>
+                                <th>Birthday</th>
+                                <th>Vehicle</th>
+                                <th>Monthly Ticket</th>
+                                <th>Start Date</th>
+                                <th>Expiration Date</th>
+                            </tr>
+                            {% for i in svList %}
+                            <tr style="background-color: #55d0ff; color: white;">
+                                <th>{{i.name}}</th>
+                                <th>{{i.studentID}}</th>
+                                <th>{{i.faculty}}</th>
+                                <th>{{i.birthday}}</th>
+                                <th>{{i.vehicle}}</th>
+                                <th>{{i.kindOfTicket}}</th>
+                                <th>{{i.startDate}}</th>
+                                <th>{{i.expirationDate}}</th>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="qlxtb">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6" style="border-right: 2px solid;">
+                        <div class="row">
+                            <div class="col-sm-2"> </div>
+                            <div class="col-md-8">
+                                <h1 class="text-center text-success"> Gửi xe </h1>
+                                <br/>
+                                <div class="col-sm-12">
+                                    <div class="tab-content">
+                                        <div id="home" class="tab-pane fade in active">
+                                            <form action="#">
+                                                <div class="form-group">
+                                                    <label>Student ID</label>
+                                                    <input type="text" class="form-control" id="studentIDGx">
+                                                </div> 
+                                                <div class="form-group">
+                                                    <label>Vihicle Plate</label>
+                                                    <input type="text" class="form-control" id="vihicleGx">
+                                                </div>
+                                                <button type="submit" class="btn btn-default btn-lg" id="submitGx">Submit</button>
+                                            </form>
+                                            <br/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-2"> </div>
+                            <div class="col-md-8">
+                                <h1 class="text-center text-success"> Lấy xe </h1>
+                                <br/>
+                                <div class="col-sm-12">
+                                    <div class="tab-content">
+                                        <div id="home" class="tab-pane fade in active">
+                                            <form action="#">
+                                                <div class="form-group">
+                                                    <label>Student ID</label>
+                                                    <input type="text" class="form-control" id="studentIDtxt">
+                                                </div> 
+                                                <div class="form-group">
+                                                    <label>Vihicle Plate</label>
+                                                    <input type="text" class="form-control" id="vihicletxt">
+                                                </div>
+                                                <button type="submit" class="btn btn-default btn-lg">Submit</button>
+                                            </form>
+                                            <br/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="tab5">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Simple Sidebar5</h1>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                        <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="tab6">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Simple Sidebar6</h1>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                        <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+    </div>
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    $('#sidebar-nav a').click(function (e) {
+  		e.preventDefault();
+  		$(this).tab('show');
+	})
+    </script>
+</body>
+</html>

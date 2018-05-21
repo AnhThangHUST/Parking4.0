@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.template import loader
 
 # Create your views here.
 from django.http import Http404
@@ -9,17 +10,25 @@ from rest_framework import status
 from .serializers import *
 from .models import *
 from datetime import datetime, date
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework import permissions
+from rest_framework import authentication
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 class StudentList(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 # Liet ke tat ca cac sinh vien va xe cua sinh vien
     def get(self, request, format=None):
+        template = loader.get_template('index.html')
         students = Student.objects.all()
         serializer = StudentSerializer(students, many=True)
-        return Response(serializer.data)
+        context = {
+            'svList': serializer.data,
+        }
+       # return Response(serializer.data)
+        return HttpResponse(template.render(context, request))
 
 # Tao moi ve xe cho sinh vien
     def post(self, request, format=None):
@@ -115,6 +124,8 @@ class TurnMangementDetail(APIView):
         return Response(serializer.data)
 
 @api_view(['POST'])
+@authentication_classes((SessionAuthentication, BasicAuthentication))
+@permission_classes((IsAuthenticated,))
 def vehicleIn(request):
     json = request.data
     if (ParkingLot.objects.filter(numberPlate = json["numberPlate"])):
