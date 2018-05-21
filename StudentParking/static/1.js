@@ -29,13 +29,16 @@ function getDkvcsvValue() {
 
 $(document).ready(function(){
     $("#submitGx").click(function(){
-        var json ={"student": $("#studentIDGx").val(), "numberPlate": $("#vihicleGx").val()};
+        var json = {"student": $("#studentIDGx").val(), "numberPlate": $("#vihicleGx").val()};
+        console.log(json);
+
         $.ajax({
             url: "/ParkingManagement/VehicleIn/",
             type: "post", // or "get"
             data: json,
             success: function(data) {
-              alert(data);
+              //alert(data);
+                console.log(data);
             }
         });
     });

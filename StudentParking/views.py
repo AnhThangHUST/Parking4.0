@@ -18,7 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 class StudentList(APIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 # Liet ke tat ca cac sinh vien va xe cua sinh vien
     def get(self, request, format=None):
         template = loader.get_template('index.html')
@@ -43,7 +43,7 @@ class StudentList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class StudentDetail(APIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def get_object(self, pk):
         try:
             return Student.objects.get(pk=pk)
@@ -85,12 +85,14 @@ class StudentDetail(APIView):
 
 # Thong ke cac xe gui trong bai
 class ParkingLotList(APIView):
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def get(self, request, format = None):
         tempParks = ParkingLot.objects.all()
         serializer = ParkingLotSerializer(tempParks, many=True) 
         return Response(serializer.data)
 
 class ParkingLotDetail(APIView):
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def get_object(self, numberPlate):
         try:
             return ParkingLot.objects.get(numberPlate = numberPlate)
@@ -105,12 +107,14 @@ class ParkingLotDetail(APIView):
 
 
 class TurnManagementList(APIView):
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def get(self, request, format = None):
         report = DailyTurnManagement.objects.all()
         serializer = DailyTurnManagementSerializer(report, many=True)
         return Response(serializer.data)
 
 class TurnMangementDetail(APIView):
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def get_object(self, numberPlate):
         try:
             return DailyTurnManagement.objects.filter(numberPlate = numberPlate)
@@ -123,11 +127,13 @@ class TurnMangementDetail(APIView):
         serializer = DailyTurnManagementSerializer(tempPark, many = True)
         return Response(serializer.data)
 
+import copy
+
 @api_view(['POST'])
-@authentication_classes((SessionAuthentication, BasicAuthentication))
-@permission_classes((IsAuthenticated,))
+#@authentication_classes((SessionAuthentication, BasicAuthentication))
+#@permission_classes((IsAuthenticated,))
 def vehicleIn(request):
-    json = request.data
+    json = copy.deepcopy(request.data)
     if (ParkingLot.objects.filter(numberPlate = json["numberPlate"])):
         return Response("This vehicle was parked. Please check this student", status=status.HTTP_400_BAD_REQUEST)
     try:
@@ -154,7 +160,7 @@ def vehicleIn(request):
 
 @api_view(['POST'])
 def vehicleOut(request):
-    json = request.data
+    json = copy.deepcopy(request.data)
     try:
         # Lay xe ra dua theo bien so xe roi check lai so voi sinh vien
         tempPark = ParkingLot.objects.get(numberPlate = json["numberPlate"])

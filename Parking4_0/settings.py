@@ -119,7 +119,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
-STATIC_ROOT = '/home/thepbk/prog/huongDoiTuong/Parking4.0/StudentParking/static'
 #STATICFILES_DIRS = (
 #    # location of your application, should not be public web accessible 
 #    '/home/thepbk/prog/huongDoiTuong/Parking4.0/StudentParking/static',
