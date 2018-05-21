@@ -17,18 +17,21 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
+@api_view(["GET"])
+def loadDomain(request):
+     template = loader.get_template('index.html')
+     context = {}
+     return HttpResponse(template.render(context,request))
+
 class StudentList(APIView):
     #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 # Liet ke tat ca cac sinh vien va xe cua sinh vien
     def get(self, request, format=None):
-        template = loader.get_template('index.html')
         students = Student.objects.all()
         serializer = StudentSerializer(students, many=True)
-        context = {
-            'svList': serializer.data,
-        }
-       # return Response(serializer.data)
-        return HttpResponse(template.render(context, request))
+        
+        return Response(serializer.data)
+        # return HttpResponse(template.render(context, request))
 
 # Tao moi ve xe cho sinh vien
     def post(self, request, format=None):
@@ -186,7 +189,7 @@ def registerMonthlyTicket(request):
         student = Student.objects.get(pk = json["studentID"])
     except Student.DoesNotExist:
         return Response("This person haven't had ticket!", status=status.HTTP_404_NOT_FOUND)
-    kindOfTicket = bool(json["kindOfTicket"])
+    kindOfTicket = True
     # Neu la ve thang
     if kindOfTicket == True:
         student.kindOfTicket = True 
@@ -197,6 +200,8 @@ def registerMonthlyTicket(request):
         expirationDate = date(int(year), int(month), int(day))
         student.setExpirationDate(expirationDate)
         student.save()
-        return Response("Register Monthly Ticket successfully!!")
+        message = "Register Monthly Ticket successfully!!"
+        return Response(message)
     else: 
-        return Response("Ticket is still daily ticket")
+        message = "Ticket is still daily ticket"
+        return Response(message)

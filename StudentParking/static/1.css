@@ -206,7 +206,7 @@ body {
     margin-top: 30px;
 }
 
-#tttcsvTable > tbody > tr > th {
+#tttcsvTable > tbody > tr > td {
     text-align: center;
     border: 1px solid;
     width: 12%;
